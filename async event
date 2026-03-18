@@ -1,0 +1,15 @@
+if (async_load[? "channel_index"] == global.te_queue_id && global.te_buffer != -1)
+{
+    var _src  = async_load[? "buffer_id"];
+    var _len  = async_load[? "data_len"];
+    var _num  = _len div 4;
+
+    buffer_seek(_src, buffer_seek_start, 0);
+    for (var i = 0; i < _num; i++)
+    {
+        var _f = buffer_read(_src, buffer_f32);
+        var _s = clamp(round(_f * 32767), -32768, 32767);
+        buffer_write(global.te_buffer, buffer_s16, _s);
+        global.te_data_size += 2;
+    }
+}
